@@ -26,6 +26,7 @@ import com.milesilac.currentbillstracker.domain.model.Bill
 
 @Composable
 fun MainPage(
+    modifier: Modifier = Modifier,
     billingList: List<Bill>,
     onBillingClick: () -> Unit,
     onBillingLongClick: () -> Unit,
@@ -33,6 +34,7 @@ fun MainPage(
     onConfirmClick: () -> Unit
 ) {
     Column(
+        modifier = modifier,
         verticalArrangement = Arrangement.Center
     ) {
         LazyColumn(
