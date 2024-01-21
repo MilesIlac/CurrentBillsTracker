@@ -2,8 +2,10 @@ package com.milesilac.currentbillstracker.ui.main.composables
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -14,8 +16,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.milesilac.currentbillstracker.R
 import com.milesilac.currentbillstracker.common.DEFAULT_BILLING_COMPANY
 import com.milesilac.currentbillstracker.common.DEFAULT_COVERAGE
 import com.milesilac.currentbillstracker.domain.model.Bill
@@ -25,6 +29,7 @@ fun MainPage(
     billingList: List<Bill>,
     onBillingClick: () -> Unit,
     onBillingLongClick: () -> Unit,
+    onAddClick: () -> Unit,
     onConfirmClick: () -> Unit
 ) {
     Column(
@@ -46,14 +51,29 @@ fun MainPage(
             }
         }
         Spacer(modifier = Modifier.size(20.dp))
-        Button(
-            modifier = Modifier.align(Alignment.CenterHorizontally),
-            onClick = onConfirmClick
+        Row(
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .fillMaxWidth(0.8F),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = "Confirm"
-            )
+            Button(
+                onClick = onAddClick
+            ) {
+                Text(
+                    text = stringResource(id = R.string.txt_add_billing)
+                )
+            }
+            Button(
+                onClick = onConfirmClick
+            ) {
+                Text(
+                    text = stringResource(id = R.string.txt_confirm)
+                )
+            }
         }
+
     }
 }
 
@@ -94,6 +114,7 @@ fun MainPagePreview() {
             billingList = billingList,
             onBillingClick = {},
             onBillingLongClick = {},
+            onAddClick = {},
             onConfirmClick = {}
         )
     }

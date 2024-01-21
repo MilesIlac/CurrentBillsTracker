@@ -29,6 +29,7 @@ class MainActivity : ComponentActivity() {
                         billingList = testBillingList(),
                         onBillingClick = {},
                         onBillingLongClick = {},
+                        onAddClick = {},
                         onConfirmClick = {}
                     )
                 }
@@ -49,6 +50,7 @@ fun MainPreview() {
                 billingList = testBillingList(),
                 onBillingClick = {},
                 onBillingLongClick = {},
+                onAddClick = {},
                 onConfirmClick = {}
             )
         }
