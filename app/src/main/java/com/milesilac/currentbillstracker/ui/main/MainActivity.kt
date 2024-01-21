@@ -1,6 +1,7 @@
 package com.milesilac.currentbillstracker.ui.main
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,10 +28,34 @@ class MainActivity : ComponentActivity() {
                 ) {
                     MainPage(
                         billingList = testBillingList(),
-                        onBillingClick = {},
-                        onBillingLongClick = {},
-                        onAddClick = {},
-                        onConfirmClick = {}
+                        onBillingClick = {
+                            Toast.makeText(
+                                this@MainActivity,
+                                "Bill clicked",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        },
+                        onBillingLongClick = {
+                            Toast.makeText(
+                                this@MainActivity,
+                                "Bill long-clicked",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        },
+                        onAddClick = {
+                            Toast.makeText(
+                                this@MainActivity,
+                                "Add clicked",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        },
+                        onConfirmClick = {
+                            Toast.makeText(
+                                this@MainActivity,
+                                "Confirm clicked",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     )
                 }
             }
