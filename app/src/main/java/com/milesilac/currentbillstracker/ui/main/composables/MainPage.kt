@@ -21,7 +21,12 @@ import com.milesilac.currentbillstracker.common.DEFAULT_COVERAGE
 import com.milesilac.currentbillstracker.domain.model.Bill
 
 @Composable
-fun MainPage(billingList: List<Bill>) {
+fun MainPage(
+    billingList: List<Bill>,
+    onBillingClick: () -> Unit,
+    onBillingLongClick: () -> Unit,
+    onConfirmClick: () -> Unit
+) {
     Column(
         verticalArrangement = Arrangement.Center
     ) {
@@ -34,16 +39,16 @@ fun MainPage(billingList: List<Bill>) {
                 BillingCard(
                     billingCompany = bill.billingCompanyOrSector,
                     billAmount = bill.billAmount.toString(),
-                    billingCoverage = bill.billCoverage
-                ) {
-
-                }
+                    billingCoverage = bill.billCoverage,
+                    onClick = onBillingClick,
+                    onLongClick = onBillingLongClick
+                )
             }
         }
         Spacer(modifier = Modifier.size(20.dp))
         Button(
             modifier = Modifier.align(Alignment.CenterHorizontally),
-            onClick = { /*TODO*/ }
+            onClick = onConfirmClick
         ) {
             Text(
                 text = "Confirm"
@@ -85,6 +90,11 @@ fun MainPagePreview() {
     Surface(
         modifier = Modifier.fillMaxSize(),
     ) {
-        MainPage(billingList = billingList)
+        MainPage(
+            billingList = billingList,
+            onBillingClick = {},
+            onBillingLongClick = {},
+            onConfirmClick = {}
+        )
     }
 }

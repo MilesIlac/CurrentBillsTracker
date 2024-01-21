@@ -1,7 +1,8 @@
 package com.milesilac.currentbillstracker.ui.main.composables
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -19,19 +20,23 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.milesilac.currentbillstracker.common.DEFAULT_BILLING_COMPANY
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun BillingCard(
-    modifier: Modifier = Modifier,
     billingCompany: String,
     billAmount: String,
     billingCoverage: String,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    onLongClick: () -> Unit
 ) {
     Box (
         modifier = Modifier
             .border(2.dp, MaterialTheme.colorScheme.primary, RoundedCornerShape(4.dp))
             .padding(4.dp)
-            .clickable(onClick = onClick)
+            .combinedClickable(
+                onClick = onClick,
+                onLongClick = onLongClick
+            )
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -67,8 +72,8 @@ fun BillingCardPreview() {
     BillingCard(
         billingCompany = DEFAULT_BILLING_COMPANY,
         billAmount = "P500.00",
-        billingCoverage = "February - September"
-    ) {
-
-    }
+        billingCoverage = "February - September",
+        onClick = {},
+        onLongClick = {}
+    )
 }

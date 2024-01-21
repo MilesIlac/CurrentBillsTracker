@@ -25,7 +25,12 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    MainPage(billingList = testBillingList())
+                    MainPage(
+                        billingList = testBillingList(),
+                        onBillingClick = {},
+                        onBillingLongClick = {},
+                        onConfirmClick = {}
+                    )
                 }
             }
         }
@@ -40,7 +45,12 @@ fun MainPreview() {
         color = MaterialTheme.colorScheme.background
     ) {
         CurrentBillsTrackerTheme {
-            MainPage(billingList = testBillingList())
+            MainPage(
+                billingList = testBillingList(),
+                onBillingClick = {},
+                onBillingLongClick = {},
+                onConfirmClick = {}
+            )
         }
     }
 }
