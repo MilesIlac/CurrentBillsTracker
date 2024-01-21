@@ -1,24 +1,53 @@
 package com.milesilac.currentbillstracker.ui.main.composables
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.milesilac.currentbillstracker.common.DEFAULT_BILLING_COMPANY
 import com.milesilac.currentbillstracker.common.DEFAULT_COVERAGE
 import com.milesilac.currentbillstracker.domain.model.Bill
 
 @Composable
 fun MainPage(billingList: List<Bill>) {
-    LazyColumn {
-        items(billingList) { bill ->
-            BillingCard(
-                billingCompany = bill.billingCompanyOrSector,
-                billAmount = bill.billAmount.toString(),
-                billingCoverage = bill.billCoverage
-            ) {
+    Column(
+        verticalArrangement = Arrangement.Center
+    ) {
+        LazyColumn(
+            modifier = Modifier.padding(horizontal = 10.dp),
+            verticalArrangement = Arrangement.spacedBy(5.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            items(billingList) { bill ->
+                BillingCard(
+                    billingCompany = bill.billingCompanyOrSector,
+                    billAmount = bill.billAmount.toString(),
+                    billingCoverage = bill.billCoverage
+                ) {
 
+                }
             }
+        }
+        Spacer(modifier = Modifier.size(20.dp))
+        Button(
+            modifier = Modifier.align(Alignment.CenterHorizontally),
+            onClick = { /*TODO*/ }
+        ) {
+            Text(
+                text = "Confirm"
+            )
         }
     }
 }
@@ -53,5 +82,9 @@ fun MainPagePreview() {
             billCoverage = DEFAULT_COVERAGE
         ),
     )
-    MainPage(billingList = billingList)
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+    ) {
+        MainPage(billingList = billingList)
+    }
 }
