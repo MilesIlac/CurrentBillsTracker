@@ -1,4 +1,4 @@
-package com.milesilac.currentbillstracker
+package com.milesilac.currentbillstracker.ui.main
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
