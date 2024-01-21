@@ -1,6 +1,8 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("com.google.dagger.hilt.android")
+    kotlin("kapt")
 }
 
 android {
@@ -66,6 +68,26 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1")
 
+    //COROUTINES
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1")
+    //
+
+    //DAGGER-HILT
+    val hiltVersion = "2.50"
+    implementation("com.google.dagger:hilt-android:2.50") //version-checker
+    kapt("com.google.dagger:hilt-compiler:$hiltVersion")
+
+    // For instrumentation tests
+    androidTestImplementation("com.google.dagger:hilt-android-testing:$hiltVersion")
+    kaptAndroidTest("com.google.dagger:hilt-compiler:$hiltVersion")
+
+    // For local unit tests
+    testImplementation("com.google.dagger:hilt-android-testing:$hiltVersion")
+    kaptTest("com.google.dagger:hilt-compiler:$hiltVersion")
+    //
+}
+
+kapt {
+    correctErrorTypes = true
 }
