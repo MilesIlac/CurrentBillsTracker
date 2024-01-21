@@ -15,7 +15,9 @@ import com.milesilac.currentbillstracker.common.DEFAULT_COVERAGE
 import com.milesilac.currentbillstracker.domain.model.Bill
 import com.milesilac.currentbillstracker.ui.main.composables.MainPage
 import com.milesilac.currentbillstracker.ui.theme.CurrentBillsTrackerTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
