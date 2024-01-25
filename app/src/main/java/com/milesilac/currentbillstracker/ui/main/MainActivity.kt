@@ -8,11 +8,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.milesilac.currentbillstracker.common.DEFAULT_BILLING_COMPANY
-import com.milesilac.currentbillstracker.common.DEFAULT_COVERAGE
-import com.milesilac.currentbillstracker.domain.model.Bill
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.milesilac.currentbillstracker.ui.main.composables.MainPage
 import com.milesilac.currentbillstracker.ui.theme.CurrentBillsTrackerTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -22,6 +21,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            val viewModel: MainViewModel = hiltViewModel()
             CurrentBillsTrackerTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
@@ -29,7 +29,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     MainPage(
-                        billingList = testBillingList(),
+                        billingList = viewModel.stateFlow.collectAsState().value,
                         onBillingClick = {
                             Toast.makeText(
                                 this@MainActivity,
@@ -68,13 +68,14 @@ class MainActivity : ComponentActivity() {
 @Preview(showBackground = true)
 @Composable
 fun MainPreview() {
+    val viewModel: MainViewModel = hiltViewModel()
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
     ) {
         CurrentBillsTrackerTheme {
             MainPage(
-                billingList = testBillingList(),
+                billingList = viewModel.testBillingList,
                 onBillingClick = {},
                 onBillingLongClick = {},
                 onAddClick = {},
@@ -83,31 +84,3 @@ fun MainPreview() {
         }
     }
 }
-
-private fun testBillingList() = listOf(
-    Bill(
-        billingCompanyOrSector = DEFAULT_BILLING_COMPANY,
-        billAmount = 500.00F,
-        billCoverage = "January - February"
-    ),
-    Bill(
-        billingCompanyOrSector = "Pampanga Electric Co. II",
-        billAmount = 4000.00F,
-        billCoverage = DEFAULT_COVERAGE
-    ),
-    Bill(
-        billingCompanyOrSector = "PAG-IBIG Housing Loan",
-        billAmount = 5500.00F,
-        billCoverage = DEFAULT_COVERAGE
-    ),
-    Bill(
-        billingCompanyOrSector = "Home Owners' Association",
-        billAmount = 400.00F,
-        billCoverage = DEFAULT_COVERAGE
-    ),
-    Bill(
-        billingCompanyOrSector = "Internet Service Provider",
-        billAmount = 3000.00F,
-        billCoverage = DEFAULT_COVERAGE
-    ),
-)

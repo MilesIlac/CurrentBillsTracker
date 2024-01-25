@@ -19,10 +19,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.milesilac.currentbillstracker.R
-import com.milesilac.currentbillstracker.common.DEFAULT_BILLING_COMPANY
-import com.milesilac.currentbillstracker.common.DEFAULT_COVERAGE
 import com.milesilac.currentbillstracker.domain.model.Bill
+import com.milesilac.currentbillstracker.ui.main.MainViewModel
 
 @Composable
 fun MainPage(
@@ -82,33 +82,8 @@ fun MainPage(
 @Preview(showBackground = true)
 @Composable
 fun MainPagePreview() {
-    val billingList = listOf(
-        Bill(
-            billingCompanyOrSector = DEFAULT_BILLING_COMPANY,
-            billAmount = 500.00F,
-            billCoverage = "January - February"
-        ),
-        Bill(
-            billingCompanyOrSector = "Pampanga Electric Co. II",
-            billAmount = 4000.00F,
-            billCoverage = DEFAULT_COVERAGE
-        ),
-        Bill(
-            billingCompanyOrSector = "PAG-IBIG Housing Loan",
-            billAmount = 5500.00F,
-            billCoverage = DEFAULT_COVERAGE
-        ),
-        Bill(
-            billingCompanyOrSector = "Home Owners' Association",
-            billAmount = 400.00F,
-            billCoverage = DEFAULT_COVERAGE
-        ),
-        Bill(
-            billingCompanyOrSector = "Internet Service Provider",
-            billAmount = 3000.00F,
-            billCoverage = DEFAULT_COVERAGE
-        ),
-    )
+    val viewModel: MainViewModel = hiltViewModel()
+    val billingList = viewModel.testBillingList
     Surface(
         modifier = Modifier.fillMaxSize(),
     ) {
