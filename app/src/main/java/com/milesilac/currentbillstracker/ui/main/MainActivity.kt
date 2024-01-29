@@ -8,10 +8,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.milesilac.currentbillstracker.ui.main.composables.MainPage
 import com.milesilac.currentbillstracker.ui.theme.CurrentBillsTrackerTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -22,6 +23,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val viewModel: MainViewModel = hiltViewModel()
+            val list by viewModel.billingListStateFlow.collectAsStateWithLifecycle()
             CurrentBillsTrackerTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
@@ -29,7 +31,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     MainPage(
-                        billingList = viewModel.stateFlow.collectAsState().value,
+                        billingList = list,
                         onBillingClick = {
                             Toast.makeText(
                                 this@MainActivity,
@@ -45,6 +47,7 @@ class MainActivity : ComponentActivity() {
                             ).show()
                         },
                         onAddClick = {
+                            viewModel.addNewBilling(list)
                             Toast.makeText(
                                 this@MainActivity,
                                 "Add clicked",
@@ -75,7 +78,7 @@ fun MainPreview() {
     ) {
         CurrentBillsTrackerTheme {
             MainPage(
-                billingList = viewModel.testBillingList,
+                billingList = viewModel.testBillingList(),
                 onBillingClick = {},
                 onBillingLongClick = {},
                 onAddClick = {},

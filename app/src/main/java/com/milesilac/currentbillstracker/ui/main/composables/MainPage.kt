@@ -83,7 +83,7 @@ fun MainPage(
 @Composable
 fun MainPagePreview() {
     val viewModel: MainViewModel = hiltViewModel()
-    val billingList = viewModel.testBillingList
+    val billingList = viewModel.testBillingList()
     Surface(
         modifier = Modifier.fillMaxSize(),
     ) {
