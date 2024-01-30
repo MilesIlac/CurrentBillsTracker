@@ -14,6 +14,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -43,13 +44,15 @@ fun MainPage(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             items(billingList) { bill ->
-                BillingCard(
-                    billingCompany = bill.billingCompanyOrSector,
-                    billAmount = bill.billAmount.toString(),
-                    billingCoverage = bill.billCoverage,
-                    onClick = onBillingClick,
-                    onLongClick = onBillingLongClick
-                )
+                key(bill.billingCompanyOrSector) {
+                    BillingCard(
+                        billingCompany = bill.billingCompanyOrSector,
+                        billAmount = bill.billAmount.toString(),
+                        billingCoverage = bill.billCoverage,
+                        onClick = onBillingClick,
+                        onLongClick = onBillingLongClick
+                    )
+                }
             }
         }
         Spacer(modifier = Modifier.size(20.dp))
