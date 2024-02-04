@@ -33,14 +33,13 @@ class MainActivity : ComponentActivity() {
                 ) {
                     MainPage(
                         billingList = list,
-                        onBillingClick = {
-                            Toast.makeText(
-                                this@MainActivity,
-                                "Bill clicked",
-                                Toast.LENGTH_SHORT
-                            ).show()
+                        onBillClick = {
+                            viewModel.quickUpdateBilling(
+                                oldList = list,
+                                billToUpdate = it
+                            )
                         },
-                        onBillingLongClick = {
+                        onBillLongClick = {
                             Toast.makeText(
                                 this@MainActivity,
                                 "Bill long-clicked",
@@ -49,11 +48,6 @@ class MainActivity : ComponentActivity() {
                         },
                         onAddClick = {
                             viewModel.addNewBilling(list)
-                            Toast.makeText(
-                                this@MainActivity,
-                                "Add clicked",
-                                Toast.LENGTH_SHORT
-                            ).show()
                         },
                         onConfirmClick = {
                             Toast.makeText(
@@ -79,8 +73,8 @@ fun MainPreview() {
         CurrentBillsTrackerTheme {
             MainPage(
                 billingList = testBillingList(),
-                onBillingClick = {},
-                onBillingLongClick = {},
+                onBillClick = {},
+                onBillLongClick = {},
                 onAddClick = {},
                 onConfirmClick = {}
             )

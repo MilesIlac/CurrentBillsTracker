@@ -29,8 +29,8 @@ import com.milesilac.currentbillstracker.ui.main.MainViewModel.Companion.testBil
 fun MainPage(
     modifier: Modifier = Modifier,
     billingList: List<Bill>,
-    onBillingClick: () -> Unit,
-    onBillingLongClick: () -> Unit,
+    onBillClick: (Bill) -> Unit,
+    onBillLongClick: () -> Unit,
     onAddClick: () -> Unit,
     onConfirmClick: () -> Unit
 ) {
@@ -50,11 +50,9 @@ fun MainPage(
             items(billingList) { bill ->
                 key(bill.billingCompanyOrSector) {
                     BillingCard(
-                        billingCompany = bill.billingCompanyOrSector,
-                        billAmount = bill.billAmount.toString(),
-                        billingCoverage = bill.billCoverage,
-                        onClick = onBillingClick,
-                        onLongClick = onBillingLongClick
+                        bill = bill,
+                        onBillClick = onBillClick,
+                        onBillLongClick = onBillLongClick
                     )
                 }
             }
@@ -98,8 +96,8 @@ fun MainPagePreview() {
     ) {
         MainPage(
             billingList = testBillingList(),
-            onBillingClick = {},
-            onBillingLongClick = {},
+            onBillClick = {},
+            onBillLongClick = {},
             onAddClick = {},
             onConfirmClick = {}
         )

@@ -19,23 +19,22 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.milesilac.currentbillstracker.common.DEFAULT_BILLING_COMPANY
+import com.milesilac.currentbillstracker.domain.model.Bill
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun BillingCard(
-    billingCompany: String,
-    billAmount: String,
-    billingCoverage: String,
-    onClick: () -> Unit,
-    onLongClick: () -> Unit
+    bill: Bill,
+    onBillClick: (Bill) -> Unit,
+    onBillLongClick: () -> Unit
 ) {
     Box (
         modifier = Modifier
             .border(2.dp, MaterialTheme.colorScheme.primary, RoundedCornerShape(4.dp))
             .padding(4.dp)
             .combinedClickable(
-                onClick = onClick,
-                onLongClick = onLongClick
+                onClick = { onBillClick(bill) },
+                onLongClick = onBillLongClick
             )
     ) {
         Row(
@@ -45,20 +44,20 @@ fun BillingCard(
         ) {
             Text(
                 modifier = Modifier.weight(weight = 1F),
-                text = billingCompany,
+                text = bill.billingCompanyOrSector,
                 fontSize = 14.sp,
                 textAlign = TextAlign.Start
             )
             Text(
                 modifier = Modifier.weight(weight = 1F),
-                text = billAmount,
+                text = bill.billAmount.toString(),
                 fontSize = 14.sp,
                 maxLines = 1,
                 textAlign = TextAlign.Center
             )
             Text(
                 modifier = Modifier.weight(weight = 1F),
-                text = billingCoverage,
+                text = bill.billCoverage,
                 fontSize = 14.sp,
                 textAlign = TextAlign.End
             )
@@ -70,10 +69,12 @@ fun BillingCard(
 @Composable
 fun BillingCardPreview() {
     BillingCard(
-        billingCompany = DEFAULT_BILLING_COMPANY,
-        billAmount = "P500.00",
-        billingCoverage = "February - September",
-        onClick = {},
-        onLongClick = {}
+        Bill(
+            billingCompanyOrSector = DEFAULT_BILLING_COMPANY,
+            billAmount = 500.00F,
+            billCoverage = "February - September"
+        ),
+        onBillClick = {},
+        onBillLongClick = {}
     )
 }

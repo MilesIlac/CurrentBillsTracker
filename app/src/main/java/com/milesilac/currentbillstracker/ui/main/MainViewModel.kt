@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.milesilac.currentbillstracker.common.DEFAULT_BILLING_COMPANY
 import com.milesilac.currentbillstracker.common.DEFAULT_COVERAGE
+import com.milesilac.currentbillstracker.common.MONTHS
+import com.milesilac.currentbillstracker.common.MONTHS_COVERAGE
 import com.milesilac.currentbillstracker.domain.model.Bill
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,21 +28,62 @@ class MainViewModel @Inject constructor(
     }
 
     fun addNewBilling(oldList: List<Bill>) {
-        val mutableList = oldList.map {
-            it.copy()
-        }.toMutableList().apply {
-            add(
-                Bill(
-                    billingCompanyOrSector = DEFAULT_BILLING_COMPANY,
-                    billAmount = 500.00F,
-                    billCoverage = "January - February"
+        performToBillingList(
+            oldList = oldList,
+            doStuff = { thisOldList ->
+                thisOldList.add(
+                    Bill(
+                        billingCompanyOrSector = DEFAULT_BILLING_COMPANY,
+                        billAmount = 500.00F,
+                        billCoverage = "January - February"
+                    )
                 )
-            )
-        }
+            }
+        )
+    }
+
+    fun quickUpdateBilling(oldList: List<Bill>, billToUpdate: Bill) {
+        performToBillingList(
+            oldList = oldList,
+            doStuff = { thisOldList ->
+                thisOldList.find { findBill -> findBill == billToUpdate }?.let { matchedBill ->
+                    when (matchedBill.billCoverage) {
+                        in MONTHS -> {
+                            val matchedIndex = MONTHS.indexOf(matchedBill.billCoverage)
+                            thisOldList[thisOldList.indexOf(matchedBill)] = Bill(
+                                billingCompanyOrSector = matchedBill.billingCompanyOrSector,
+                                billAmount = matchedBill.billAmount,
+                                billCoverage = when (matchedIndex) {
+                                    11 -> MONTHS[0]
+                                    else -> MONTHS[matchedIndex + 1]
+                                }
+                            )
+                        }
+                        in MONTHS_COVERAGE -> {
+                            val matchedIndex = MONTHS_COVERAGE.indexOf(matchedBill.billCoverage)
+                            thisOldList[thisOldList.indexOf(matchedBill)] = Bill(
+                                billingCompanyOrSector = matchedBill.billingCompanyOrSector,
+                                billAmount = matchedBill.billAmount,
+                                billCoverage = when (matchedIndex) {
+                                    11 -> MONTHS_COVERAGE[0]
+                                    else -> MONTHS_COVERAGE[matchedIndex + 1]
+                                }
+                            )
+                        }
+                        else -> {}
+                    }
+                }
+            }
+        )
+    }
+
+    private inline fun performToBillingList(
+        oldList: List<Bill>,
+        doStuff: (MutableList<Bill>) -> Unit
+    ) {
+        val newList = oldList.map { it.copy() }.toMutableList().apply { doStuff(this) }
         viewModelScope.launch {
-            mutableBillingListStateFlow.emit(
-                mutableList
-            )
+            mutableBillingListStateFlow.emit(newList)
         }
     }
 
