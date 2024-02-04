@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.milesilac.currentbillstracker.ui.main.MainViewModel.Companion.testBillingList
 import com.milesilac.currentbillstracker.ui.main.composables.MainPage
 import com.milesilac.currentbillstracker.ui.theme.CurrentBillsTrackerTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -71,14 +72,13 @@ class MainActivity : ComponentActivity() {
 @Preview(showBackground = true)
 @Composable
 fun MainPreview() {
-    val viewModel: MainViewModel = hiltViewModel()
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
     ) {
         CurrentBillsTrackerTheme {
             MainPage(
-                billingList = viewModel.testBillingList(),
+                billingList = testBillingList(),
                 onBillingClick = {},
                 onBillingLongClick = {},
                 onAddClick = {},
