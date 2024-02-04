@@ -1,5 +1,6 @@
 package com.milesilac.currentbillstracker.ui.main
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.milesilac.currentbillstracker.common.DEFAULT_BILLING_COMPANY
@@ -27,17 +28,18 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun addNewBilling(oldList: List<Bill>) {
+    fun addNewBilling(oldList: List<Bill>, billToAdd: Bill) {
         performToBillingList(
             oldList = oldList,
             doStuff = { thisOldList ->
-                thisOldList.add(
-                    Bill(
-                        billingCompanyOrSector = DEFAULT_BILLING_COMPANY,
-                        billAmount = 500.00F,
-                        billCoverage = "January - February"
-                    )
-                )
+                when (
+                    thisOldList.find {
+                        it.billingCompanyOrSector == billToAdd.billingCompanyOrSector
+                    }
+                ) {
+                    null -> thisOldList.add(billToAdd)
+                    else -> Log.e("billAddError", "Already in list")
+                }
             }
         )
     }
