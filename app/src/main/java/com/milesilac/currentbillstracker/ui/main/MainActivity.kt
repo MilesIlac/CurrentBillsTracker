@@ -31,7 +31,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val viewModel: MainViewModel = hiltViewModel()
-            val list by viewModel.billingListStateFlow.collectAsStateWithLifecycle()
+            val listState by viewModel.billingListStateFlow.collectAsStateWithLifecycle()
 
             val sheetState = rememberModalBottomSheetState()
             var showBottomSheet by remember { mutableStateOf(false) }
@@ -43,10 +43,10 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     MainPage(
-                        billingList = list,
+                        billingList = listState.newList,
                         onBillClick = {
                             viewModel.quickUpdateBilling(
-                                oldList = list,
+                                oldList = listState.newList,
                                 billToUpdate = it
                             )
                         },
@@ -76,7 +76,7 @@ class MainActivity : ComponentActivity() {
                             },
                             onAddBillingClick = {
                                 viewModel.addNewBilling(
-                                    oldList = list,
+                                    oldList = listState.newList,
                                     billToAdd = it
                                 )
                             }

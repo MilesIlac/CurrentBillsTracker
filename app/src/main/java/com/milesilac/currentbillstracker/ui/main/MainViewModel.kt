@@ -19,73 +19,104 @@ class MainViewModel @Inject constructor(
 
 ): ViewModel() {
 
-    private val mutableBillingListStateFlow = MutableStateFlow<List<Bill>>(emptyList())
+    private val mutableBillingListStateFlow = MutableStateFlow(BillUIState())
     val billingListStateFlow = mutableBillingListStateFlow.asStateFlow()
 
     init {
         viewModelScope.launch {
-            mutableBillingListStateFlow.emit(testBillingList())
+            mutableBillingListStateFlow.emit(
+                BillUIState(
+                    newList = testBillingList()
+                )
+            )
         }
     }
 
-    fun addNewBilling(oldList: List<Bill>, billToAdd: Bill) {
-        performToBillingList(
-            oldList = oldList,
-            doStuff = { thisOldList ->
-                when (
-                    thisOldList.find {
-                        it.billingCompanyOrSector == billToAdd.billingCompanyOrSector
-                    }
-                ) {
-                    null -> thisOldList.add(billToAdd)
-                    else -> Log.e("billAddError", "Already in list")
-                }
-            }
-        )
-    }
-
-    fun quickUpdateBilling(oldList: List<Bill>, billToUpdate: Bill) {
-        performToBillingList(
-            oldList = oldList,
-            doStuff = { thisOldList ->
-                thisOldList.find { findBill -> findBill == billToUpdate }?.let { matchedBill ->
-                    when (matchedBill.billCoverage) {
-                        in MONTHS -> {
-                            val matchedIndex = MONTHS.indexOf(matchedBill.billCoverage)
-                            thisOldList[thisOldList.indexOf(matchedBill)] = Bill(
-                                billingCompanyOrSector = matchedBill.billingCompanyOrSector,
-                                billAmount = matchedBill.billAmount,
-                                billCoverage = when (matchedIndex) {
-                                    11 -> MONTHS[0]
-                                    else -> MONTHS[matchedIndex + 1]
-                                }
-                            )
-                        }
-                        in MONTHS_COVERAGE -> {
-                            val matchedIndex = MONTHS_COVERAGE.indexOf(matchedBill.billCoverage)
-                            thisOldList[thisOldList.indexOf(matchedBill)] = Bill(
-                                billingCompanyOrSector = matchedBill.billingCompanyOrSector,
-                                billAmount = matchedBill.billAmount,
-                                billCoverage = when (matchedIndex) {
-                                    11 -> MONTHS_COVERAGE[0]
-                                    else -> MONTHS_COVERAGE[matchedIndex + 1]
-                                }
-                            )
-                        }
-                        else -> {}
-                    }
-                }
-            }
-        )
-    }
-
-    private inline fun performToBillingList(
+    fun addNewBilling(
         oldList: List<Bill>,
-        doStuff: (MutableList<Bill>) -> Unit
+        billToAdd: Bill
+    ) = performToBillingList(oldList, performAddNewBilling(oldList, billToAdd))
+
+    private fun performAddNewBilling(
+        oldList: List<Bill>,
+        billToAdd: Bill
+    ): BillState<List<Bill>> {
+        val newList = oldList.map { it.copy() }.toMutableList()
+        val matchedBill = newList.find {
+            it.billingCompanyOrSector == billToAdd.billingCompanyOrSector
+        }
+        return when (matchedBill) {
+            null -> {
+                newList.add(billToAdd)
+                BillState.UpdatedList(newList = newList)
+            }
+            else -> {
+                Log.e("billAddError", "Already in list")
+                BillState.AddBillingError()
+            }
+        }
+    }
+
+    fun quickUpdateBilling(
+        oldList: List<Bill>,
+        billToUpdate: Bill
+    ) = performToBillingList(oldList, performQuickUpdateBilling(oldList, billToUpdate))
+
+    private fun performQuickUpdateBilling(
+        oldList: List<Bill>,
+        billToUpdate: Bill
+    ): BillState<List<Bill>> {
+        val newList = oldList.map { it.copy() }.toMutableList()
+        newList.find { findBill -> findBill == billToUpdate }?.let { matchedBill ->
+            when (matchedBill.billCoverage) {
+                in MONTHS -> {
+                    val matchedIndex = MONTHS.indexOf(matchedBill.billCoverage)
+                    newList[newList.indexOf(matchedBill)] = Bill(
+                        billingCompanyOrSector = matchedBill.billingCompanyOrSector,
+                        billAmount = matchedBill.billAmount,
+                        billCoverage = when (matchedIndex) {
+                            11 -> MONTHS[0]
+                            else -> MONTHS[matchedIndex + 1]
+                        }
+                    )
+                }
+                in MONTHS_COVERAGE -> {
+                    val matchedIndex = MONTHS_COVERAGE.indexOf(matchedBill.billCoverage)
+                    newList[newList.indexOf(matchedBill)] = Bill(
+                        billingCompanyOrSector = matchedBill.billingCompanyOrSector,
+                        billAmount = matchedBill.billAmount,
+                        billCoverage = when (matchedIndex) {
+                            11 -> MONTHS_COVERAGE[0]
+                            else -> MONTHS_COVERAGE[matchedIndex + 1]
+                        }
+                    )
+                }
+                else -> {}
+            }
+        }
+        return BillState.UpdatedList(newList = newList)
+    }
+
+    private fun performToBillingList(
+        oldList: List<Bill>,
+        doStuff: BillState<List<Bill>>
     ) {
-        val newList = oldList.map { it.copy() }.toMutableList().apply { doStuff(this) }
         viewModelScope.launch {
-            mutableBillingListStateFlow.emit(newList)
+            mutableBillingListStateFlow.emit(
+                when (doStuff) {
+                    is BillState.UpdatedList -> {
+                        BillUIState(
+                            newList = doStuff.newList ?: listOf()
+                        )
+                    }
+                    is BillState.AddBillingError -> {
+                        BillUIState(
+                            newList = oldList,
+                            errorMessage = BillUIState.Error.AlreadyInList
+                        )
+                    }
+                }
+            )
         }
     }
 
