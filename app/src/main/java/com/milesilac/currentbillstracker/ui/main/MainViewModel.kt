@@ -34,25 +34,43 @@ class MainViewModel @Inject constructor(
 
     fun addNewBilling(
         oldList: List<Bill>,
-        billToAdd: Bill
-    ) = performToBillingList(oldList, performAddNewBilling(oldList, billToAdd))
+        billToAdd: Bill,
+        checkBill: Bill? = null
+    ) = performToBillingList(oldList, performAddNewBilling(oldList, billToAdd, checkBill))
 
     private fun performAddNewBilling(
         oldList: List<Bill>,
-        billToAdd: Bill
+        billToAdd: Bill,
+        checkBill: Bill? = null
     ): BillState<List<Bill>> {
-        val newList = oldList.map { it.copy() }.toMutableList()
-        val matchedBill = newList.find {
-            it.billingCompanyOrSector == billToAdd.billingCompanyOrSector
-        }
-        return when (matchedBill) {
-            null -> {
-                newList.add(billToAdd)
-                BillState.UpdatedList(newList = newList)
-            }
-            else -> {
+        when (billToAdd) {
+            checkBill -> {
                 Log.e("billAddError", "Already in list")
-                BillState.AddBillingError()
+                return BillState.AddBillingError(
+                    errorMessage = Error.AlreadyInList,
+                    checkBill = checkBill
+                )
+            }
+
+            else -> {
+                val newList = oldList.map { it.copy() }.toMutableList()
+                val matchedBill = newList.find {
+                    it.billingCompanyOrSector == billToAdd.billingCompanyOrSector
+                }
+                return when (matchedBill) {
+                    null -> {
+                        newList.add(billToAdd)
+                        BillState.UpdatedList(newList = newList)
+                    }
+
+                    else -> {
+                        Log.e("billAddError", "Already in list")
+                        BillState.AddBillingError(
+                            errorMessage = Error.AlreadyInList,
+                            checkBill = matchedBill
+                        )
+                    }
+                }
             }
         }
     }
@@ -112,7 +130,8 @@ class MainViewModel @Inject constructor(
                     is BillState.AddBillingError -> {
                         BillUIState(
                             newList = oldList,
-                            errorMessage = BillUIState.Error.AlreadyInList
+                            errorMessage = doStuff.errorMessage,
+                            checkBill = doStuff.checkBill
                         )
                     }
                 }

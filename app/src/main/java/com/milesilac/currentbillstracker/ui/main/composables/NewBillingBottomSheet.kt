@@ -22,7 +22,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.milesilac.currentbillstracker.R
-import com.milesilac.currentbillstracker.common.DEFAULT_BILLING_COMPANY
 import com.milesilac.currentbillstracker.common.DEFAULT_COVERAGE
 import com.milesilac.currentbillstracker.domain.model.Bill
 
@@ -60,8 +59,8 @@ fun NewBillingBottomSheetPreview(
 @Composable
 fun NewBillingBottomSheetContent(
     onAddBillingClick: (Bill) -> Unit,
-    defaultInputBillingCompany: String = DEFAULT_BILLING_COMPANY,
-    defaultInputBillingAmount: String = "500.00",
+    defaultInputBillingCompany: String = "Internet Service Provider",
+    defaultInputBillingAmount: String = "3000.00",
     defaultInputBillingCoverage: String = DEFAULT_COVERAGE,
 ) {
     var inputBillingCompanyText by remember { mutableStateOf(defaultInputBillingCompany) }
